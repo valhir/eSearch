@@ -474,7 +474,7 @@ function rmR(dir_path: string) {
 
 // 快捷键
 const 快捷键函数: Record<keyof setting["快捷键"], () => void> = {
-    自动识别: () => {}, // [离线版-已禁用] 原 autoOpen（联网搜索）
+    自动识别: autoOpen, // [离线版] 已恢复
     截屏搜索: () => {}, // [离线版-已禁用] 原 showPhoto（联网搜索）
     选中搜索: () => {}, // [离线版-已禁用] 原 openSelection（联网搜索）
     剪贴板搜索: () => {}, // [离线版-已禁用] 原 openClipBoard（联网搜索）
@@ -562,13 +562,13 @@ app.whenReady().then(() => {
         // 托盘
         tray = new Tray(join(runPath, "assets/logo/32x32.png"));
         contextMenu = Menu.buildFromTemplate([
-            /* [离线版-已禁用] 搜索类联网入口（自动识别/截屏搜索/选中搜索/剪贴板搜索）
             {
                 label: `${t("自动识别")}`,
                 click: () => {
                     autoOpen();
                 },
             },
+            /* [离线版-已禁用] 搜索类联网入口（截屏搜索/选中搜索/剪贴板搜索）
             {
                 label: t("截屏搜索"),
                 click: () => {

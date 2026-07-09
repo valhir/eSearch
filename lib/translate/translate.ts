@@ -9,7 +9,13 @@ const rootDir = path.join(
     "./lib/translate",
 );
 
-const ignore = require(path.join(rootDir, "./ignore.json")) as string[];
+// [容错] 预览/开发模式下 __dirname 可能指向 electron.asar 导致路径解析失败，require 失败时回退
+let ignore: string[] = [];
+try {
+    ignore = require(path.join(rootDir, "./ignore.json")) as string[];
+} catch (e) {
+    console.warn("translate: ignore.json 加载失败，回退为空列表", e);
+}
 
 let language = "";
 
@@ -30,7 +36,12 @@ function parseLan(lan: string) {
 function lan(lan: string | undefined) {
     language = parseLan(lan ?? "");
     if (language !== "zh-HANS") {
-        l = require(path.join(rootDir, `./${language}.json`));
+        try {
+            l = require(path.join(rootDir, `./${language}.json`));
+        } catch (e) {
+            console.warn(`translate: ${language}.json 加载失败`, e);
+            l = {};
+        }
     }
 }
 
@@ -84,7 +95,12 @@ function tLan(text: string, lan: string) {
     return autoSt(text, map);
 }
 
-const source = require(path.join(rootDir, "./source.json"));
+let source: Record<string, string> = {};
+try {
+    source = require(path.join(rootDir, "./source.json"));
+} catch (e) {
+    console.warn("translate: source.json 加载失败", e);
+}
 let l: Record<string, string>;
 
 function getLans() {
