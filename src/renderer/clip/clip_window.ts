@@ -3052,6 +3052,8 @@ for (const [_, { el, f }] of Object.entries(toolsX)) {
 
 const toolBarEl = view().attr({ id: "tool_bar" }).class(Class.glassBar);
 for (const [id, { el }] of Object.entries(toolsX)) {
+    // [离线版-已禁用] 跳过 以图搜图(search)/屏幕翻译(translate)（联网）
+    if (id === "search" || id === "translate") continue;
     toolBarEl.add(el.attr({ id: `tool_${id}` }));
 }
 
@@ -3900,6 +3902,8 @@ hotkeys.filter = (event) => {
 
 toHotkeyScope("normal");
 for (const k of tools) {
+    // [离线版-已禁用] 跳过 以图搜图(search)/屏幕翻译(translate) 快捷键（联网）
+    if (k === "search" || k === "translate") continue;
     let key = store.get(`工具快捷键.${k}`) as string;
     if (["esc", "escape"].includes(key.toLowerCase()))
         hotkeys(key, "normal", toolsX[k].f);
@@ -4136,7 +4140,13 @@ document.onmouseup = (e) => {
             // 抬起鼠标后工具栏跟随
             followBar({ x: e.clientX, y: e.clientY });
             // 框选后默认操作
-            if (autoDo !== "no" && e.button === 0) {
+            // [离线版-已禁用] 跳过联网默认操作（以图搜图/屏幕翻译）
+            if (
+                autoDo !== "no" &&
+                autoDo !== "search" &&
+                autoDo !== "translate" &&
+                e.button === 0
+            ) {
                 toolsX[autoDo].f();
             }
             isShowBars = true;

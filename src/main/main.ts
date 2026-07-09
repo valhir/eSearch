@@ -440,7 +440,8 @@ async function argRun(c: string[], first?: boolean) {
         const img = await getImg();
         if (!img) return;
         ding(img);
-    } else if (argv.m || argv.img) {
+    } /* [离线版-已禁用] 以图搜图 CLI（联网）
+    else if (argv.m || argv.img) {
         const img = await getImg();
         if (!img) return;
         createMainWindow({
@@ -449,7 +450,7 @@ async function argRun(c: string[], first?: boolean) {
             arg0: getEngine(e, searchE, store.get("以图搜图.引擎")),
             mode: textMode,
         });
-    } else if (argv.t || argv.text) {
+    } */ else if (argv.t || argv.text) {
         createMainWindow({
             type: "text",
             content: argv.t || argv.text,
@@ -473,10 +474,10 @@ function rmR(dir_path: string) {
 
 // 快捷键
 const 快捷键函数: Record<keyof setting["快捷键"], () => void> = {
-    自动识别: autoOpen,
-    截屏搜索: showPhoto,
-    选中搜索: openSelection,
-    剪贴板搜索: openClipBoard,
+    自动识别: () => {}, // [离线版-已禁用] 原 autoOpen（联网搜索）
+    截屏搜索: () => {}, // [离线版-已禁用] 原 showPhoto（联网搜索）
+    选中搜索: () => {}, // [离线版-已禁用] 原 openSelection（联网搜索）
+    剪贴板搜索: () => {}, // [离线版-已禁用] 原 openClipBoard（联网搜索）
     快速截屏: quickClip,
     连拍: async () => {
         lianPai();
@@ -542,6 +543,13 @@ app.whenReady().then(() => {
 
     crashReporter.start({ uploadToServer: false });
 
+    // [离线版] 关于面板版本号标注 OFFLINE
+    app.setAboutPanelOptions({
+        applicationName: app.name,
+        applicationVersion: `${app.getVersion()}-OFFLINE`,
+        version: `${app.getVersion()}-OFFLINE`,
+    });
+
     if (store.get("首次运行") === undefined) setDefaultSetting();
     fixSettingTree();
 
@@ -554,6 +562,7 @@ app.whenReady().then(() => {
         // 托盘
         tray = new Tray(join(runPath, "assets/logo/32x32.png"));
         contextMenu = Menu.buildFromTemplate([
+            /* [离线版-已禁用] 搜索类联网入口（自动识别/截屏搜索/选中搜索/剪贴板搜索）
             {
                 label: `${t("自动识别")}`,
                 click: () => {
@@ -583,6 +592,7 @@ app.whenReady().then(() => {
             {
                 type: "separator",
             },
+            */
             {
                 label: t("文字识别（OCR）"),
                 click: () => {
@@ -591,6 +601,7 @@ app.whenReady().then(() => {
                     }, store.get("主搜索功能.截屏搜索延迟"));
                 },
             },
+            /* [离线版-已禁用] 以图搜图（联网）
             {
                 label: t("以图搜图"),
                 click: () => {
@@ -599,6 +610,7 @@ app.whenReady().then(() => {
                     }, store.get("主搜索功能.截屏搜索延迟"));
                 },
             },
+            */
             {
                 label: t("超级录屏"),
                 click: () => {
@@ -608,6 +620,7 @@ app.whenReady().then(() => {
             {
                 type: "separator",
             },
+            /* [离线版-已禁用] 浏览器打开（联网）
             {
                 label: t("浏览器打开"),
                 type: "checkbox",
@@ -619,6 +632,7 @@ app.whenReady().then(() => {
             {
                 type: "separator",
             },
+            */
             {
                 label: t("从剪贴板贴图"),
                 click: () => {
@@ -628,6 +642,7 @@ app.whenReady().then(() => {
             {
                 type: "separator",
             },
+            /* [离线版-已禁用] 主页面模式（搜索/翻译，联网）
             {
                 label: t("主页面模式"),
                 type: "submenu",
@@ -652,6 +667,7 @@ app.whenReady().then(() => {
                     },
                 ],
             },
+            */
             {
                 label: t("复用主页面"),
                 toolTip: t("可加快OCR加载"),
@@ -672,12 +688,14 @@ app.whenReady().then(() => {
                     createSettingWindow();
                 },
             },
+            /* [离线版-已禁用] 教程帮助（打开外链）
             {
                 label: t("教程帮助"),
                 click: () => {
                     createHelpWindow();
                 },
             },
+            */
             {
                 type: "separator",
             },
@@ -693,6 +711,7 @@ app.whenReady().then(() => {
                       },
                   ]
                 : []),
+            /* [离线版-已禁用] 检查更新 / 反馈（均联网）
             {
                 label: t("检查更新"),
                 click: async () => {
@@ -709,6 +728,7 @@ app.whenReady().then(() => {
                     );
                 },
             },
+            */
             {
                 label: t("重启"),
                 click: () => {
@@ -893,6 +913,7 @@ function setMenu() {
                     : []),
             ],
         },
+        /* [离线版-已禁用] 帮助菜单 教程帮助（打开外链）
         {
             label: t("帮助"),
             role: "help",
@@ -905,6 +926,7 @@ function setMenu() {
                 },
             ],
         },
+        */
     ] as Electron.MenuItemConstructorOptions[];
     const menu = Menu.buildFromTemplate(menuTemplate);
     Menu.setApplicationMenu(menu);
@@ -1400,7 +1422,8 @@ mainOn("reloadMainFromSetting", () => {
     if (clipWindow && !clipWindow.isDestroyed() && !clipWindow.isVisible())
         clipWindow.reload();
     if (contextMenu && tray) {
-        contextMenu.items[8].checked = store.get("浏览器中打开");
+        // [离线版-已禁用] 浏览器打开菜单项已移除，索引失效
+        // contextMenu.items[8].checked = store.get("浏览器中打开");
         tray.popUpContextMenu(contextMenu);
         tray.closeContextMenu();
     }
@@ -2909,4 +2932,5 @@ function showVersion(arg?: { v: string; url: string } | "err") {
     notification.show();
 }
 
-if (store.get("更新.频率") === "start") checkUpdate();
+// [离线版-已禁用] 启动时自动检查更新（联网）
+// if (store.get("更新.频率") === "start") checkUpdate();

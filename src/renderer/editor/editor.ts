@@ -433,21 +433,20 @@ async function runAiSpellcheck() {
     const list = spellcheckDiff.updateDiffState();
     renderSpellcheck(list);
 }
+/* [离线版-已禁用] AI 拼写检查入口（联网）
 iconBEl("ai_check", "AI拼写检查")
     .on("click", async () => {
         runAiSpellcheck();
     })
     .addInto(aiSpellCheckP);
+*/
 const aiModelList = store.get("AI.在线模型");
+// [离线版-已禁用] 保留声明供后续引用，但不加入 DOM、不绑定 change 触发
 const aiSpellCheckModel = select(
     aiModelList.length === 0
         ? [{ name: "无AI模型", value: "" }]
         : aiModelList.map((i) => ({ name: noI18n(i.name), value: i.name })),
-)
-    .addInto(aiSpellCheckP)
-    .on("change", () => {
-        runAiSpellcheck();
-    });
+);
 if (aiModelList.length === 0) {
     aiSpellCheckModel.attr({ title: "请到设置添加在线模型" });
 }
@@ -562,15 +561,17 @@ const bottomTools = [
     imageSwitch,
     historySwitch,
     showSpellCheckSwitch,
+    /* [离线版-已禁用] 搜索/翻译 工具组（联网）
     view().add([searchB, searchSelectEl]).class(Class.group),
     view().add([translateB, translateSelectEl]).class(Class.group),
+    */
 ];
 
 bottomEl.add([
-    ...bottomTools.slice(0, -2),
+    ...bottomTools,
     bottomToolsSpacer,
-    browserTabs,
-    ...bottomTools.slice(-2),
+    // [离线版-已禁用] browserTabs（内置浏览器标签，联网）
+    // browserTabs,
 ]);
 
 function tabLi() {
@@ -1677,6 +1678,7 @@ function isLink(url: string, s: boolean) {
 function showT(st: string, m: setting["主页面"]["模式"]) {
     const t = st.replace(/[\r\n]$/, "");
     editor.push(t);
+    /* [离线版-已禁用] 主页面 自动/搜索/翻译 分发（联网）
     if (m === "auto" || t === "") {
         // 严格模式
         if (isLink(t, true)) {
@@ -1700,6 +1702,7 @@ function showT(st: string, m: setting["主页面"]["模式"]) {
     } else if (m === "translate") {
         openTab("translate");
     }
+    */
     editor.selectAll();
 }
 
@@ -2562,7 +2565,7 @@ async function localOcr(
             } else if (error) return callback(error as Error, null);
             if (!x) return callback(new Error("未找到OCR模型"), null);
 
-            x.config.det.on = (dr) => {
+            x.config.onDet = (dr) => {
                 if (dr.length <= 2) return;
                 mainSectionEl.style({ gap: cssVar("o-padding") });
                 ocrImagePel.style({ height: "100%" });
@@ -2588,7 +2591,11 @@ async function localOcr(
                     x.maskEls.masks.set(index, xel);
                 }
             };
-            x.config.rec.on = (i, _, a) => {
+            x.config.onProgress = (dtype, all, now) => {
+                if (dtype !== "rec") return;
+                const i = now - 1;
+                if (i < 0) return;
+                const a = all;
                 const x = Array.from(ocrImageS.values())[0];
                 if (!x) return; // todo 获取准确的任务
                 x.maskEls.masks.get(i)?.remove();

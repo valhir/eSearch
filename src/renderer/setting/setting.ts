@@ -2018,6 +2018,11 @@ const xs: Record<
                 .class(blockSetting)
                 .class(Class.mono)
                 .add([
+                    // [离线版] 版本号标注 OFFLINE（离线特别版）
+                    p(
+                        `eSearch ${store.get("设置版本")}-OFFLINE（离线特别版）`,
+                        true,
+                    ),
                     p(
                         `${t("本机系统内核：")} ${os.type()} ${os.release()}`,
                         true,
@@ -2142,6 +2147,7 @@ const main: {
                 title: "离线OCR",
                 settings: ["离线OCR", "OCR.识别段落", "OCR.整体方向识别"],
             },
+            /* [离线版-已禁用] 在线OCR（百度/有道，联网）
             {
                 title: "百度OCR",
                 settings: [
@@ -2154,12 +2160,14 @@ const main: {
                 title: "有道OCR",
                 settings: ["在线OCR.youdao.id", "在线OCR.youdao.secret"],
             },
+            */
         ],
     },
     {
         pageName: "人工智能",
         desc: "配置OCR、录屏背景移除等人工智能",
-        settings: ["AI.运行后端", "AI.在线模型"],
+        // [离线版-已禁用] 移除 AI.在线模型（联网），保留 AI.运行后端（离线OCR/inpaint 的 cpu/gpu 后端）
+        settings: ["AI.运行后端"],
     },
     {
         pageName: "录屏",
@@ -2236,6 +2244,7 @@ const main: {
         pageName: "贴图",
         settings: ["贴图.窗口.双击", "贴图.窗口.变换", "贴图.窗口.提示"],
     },
+    /* [离线版-已禁用] 翻译设置页（联网）
     {
         pageName: "翻译",
         settings: ["翻译.翻译器"],
@@ -2254,6 +2263,7 @@ const main: {
             },
         ],
     },
+    */
     {
         pageName: "编辑器",
         items: [
@@ -2282,6 +2292,7 @@ const main: {
             },
         ],
     },
+    /* [离线版-已禁用] 搜索与浏览设置页（联网）
     {
         pageName: "搜索与浏览",
         items: [
@@ -2302,16 +2313,18 @@ const main: {
             },
         ],
     },
+    */
     {
         pageName: "快捷键",
         items: [
             {
                 title: "全局功能",
                 settings: [
-                    "快捷键.自动识别.key",
-                    "快捷键.截屏搜索.key",
-                    "快捷键.选中搜索.key",
-                    "快捷键.剪贴板搜索.key",
+                    // [离线版-已禁用] 搜索类全局快捷键（联网）
+                    // "快捷键.自动识别.key",
+                    // "快捷键.截屏搜索.key",
+                    // "快捷键.选中搜索.key",
+                    // "快捷键.剪贴板搜索.key",
                     "快捷键.快速截屏.key",
                     "快捷键.连拍.key",
                     "快捷键.结束广截屏.key",
@@ -2324,7 +2337,7 @@ const main: {
                 settings: [
                     "工具快捷键.close",
                     "工具快捷键.ocr",
-                    "工具快捷键.search",
+                    // [离线版-已禁用] "工具快捷键.search",（以图搜图，联网）
                     "工具快捷键.QR",
                     "工具快捷键.open",
                     "工具快捷键.ding",
@@ -2332,7 +2345,7 @@ const main: {
                     "工具快捷键.long",
                     "工具快捷键.copy",
                     "工具快捷键.save",
-                    "工具快捷键.translate",
+                    // [离线版-已禁用] "工具快捷键.translate",（屏幕翻译，联网）
                     "工具快捷键.editor",
                 ],
             },
@@ -2393,7 +2406,7 @@ const main: {
                 desc: "与工具栏快捷键不同，此快捷键全局生效",
                 settings: [
                     "全局工具快捷键.ocr",
-                    "全局工具快捷键.search",
+                    // [离线版-已禁用] "全局工具快捷键.search",（以图搜图，联网）
                     "全局工具快捷键.QR",
                     "全局工具快捷键.open",
                     "全局工具快捷键.ding",
@@ -2401,16 +2414,17 @@ const main: {
                     "全局工具快捷键.long",
                     "全局工具快捷键.copy",
                     "全局工具快捷键.save",
-                    "全局工具快捷键.translate",
+                    // [离线版-已禁用] "全局工具快捷键.translate",（屏幕翻译，联网）
                     "全局工具快捷键.editor",
                 ],
             },
             {
                 title: "主页面",
                 settings: [
-                    "主页面快捷键.搜索",
-                    "主页面快捷键.翻译",
-                    "主页面快捷键.打开链接",
+                    // [离线版-已禁用] 主页面 搜索/翻译/打开链接（联网）
+                    // "主页面快捷键.搜索",
+                    // "主页面快捷键.翻译",
+                    // "主页面快捷键.打开链接",
                     "主页面快捷键.删除换行",
                     "主页面快捷键.图片区",
                     "主页面快捷键.关闭",
@@ -2424,6 +2438,7 @@ const main: {
             { title: "启动", settings: ["_autostart", "启动提示"] },
             { title: "语言", settings: ["语言.语言"] },
             { title: "托盘", settings: ["托盘"] },
+            /* [离线版-已禁用] 主搜索功能 & 代理（联网）
             {
                 title: "主搜索功能",
                 settings: [
@@ -2441,6 +2456,7 @@ const main: {
                     "代理.proxyBypassRules",
                 ],
             },
+            */
         ],
     },
     {
@@ -2477,6 +2493,7 @@ const main: {
                 ],
             },
             { title: "后台", settings: ["保留截屏窗口"] },
+            /* [离线版-已禁用] GitHub镜像（联网下载/更新）
             {
                 title: "GitHub镜像",
                 settings: [
@@ -2485,10 +2502,13 @@ const main: {
                     "网络.github镜像.api",
                 ],
             },
+            */
+            /* [离线版-已禁用] 检查更新（联网）
             {
                 title: "检查更新",
                 settings: ["更新.频率", "更新.模式", "更新.忽略版本"],
             },
+            */
             { title: "开发者模式", settings: ["dev"] },
             { title: "位置信息", settings: ["_location"] },
             { title: "版本信息", settings: ["_version"] },
@@ -2625,15 +2645,29 @@ function getSettingMem() {
     const xs: SettingPath[] = [
         "OCR.类型",
         "离线OCR",
-        "翻译.翻译器",
-        "AI.在线模型",
-        "快捷键.截屏搜索.key",
+        // [离线版-已禁用] 翻译引擎/在线模型/截屏搜索（联网）
+        // "翻译.翻译器",
+        // "AI.在线模型",
+        // "快捷键.截屏搜索.key",
         "语言.语言",
     ];
+    // [离线版] 过滤掉联网相关的记忆项（即使 localStorage 有旧缓存）
+    const 已禁用 = new Set<string>([
+        "翻译.翻译器",
+        "AI.在线模型",
+        "快捷键.自动识别.key",
+        "快捷键.截屏搜索.key",
+        "快捷键.选中搜索.key",
+        "快捷键.剪贴板搜索.key",
+        "引擎.搜索",
+        "引擎.翻译",
+        "以图搜图.引擎",
+        "更新.频率",
+    ]);
     return safeJSONParse<SettingPath[]>(
         localStorage.getItem(settingMemKey),
         xs,
-    );
+    ).filter((k) => !已禁用.has(k as string));
 }
 
 function getFromStore<t extends SettingPath>(

@@ -80,11 +80,13 @@ export function ocrList(
                 value: i.id,
                 name: i.id === defaultOcrId ? i.name : noI18n(i.name),
             })),
+        /* [离线版-已禁用] 在线OCR引擎（AI视觉/百度/有道，联网）
         ...store
             .get("AI.在线模型")
             .filter((i) => i.supportVision)
             .map((i) => ({ value: `ai-${i.name}`, name: noI18n(i.name) })),
         { value: "baidu", name: "百度" },
         { value: "youdao", name: "有道" },
+        */
     ];
 }
